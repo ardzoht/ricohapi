@@ -5,14 +5,10 @@ from django.db import models
 #For each printer
 class Printer(models.Model):
     printer_id = models.IntegerField(primary_key=True)
-    global_counter = models.IntegerField()
-    counter_print_bw = models.IntegerField()
-    counter_print_color = models.IntegerField()
-    counter_copy_bw = models.IntegerField()
-    counter_copy_color = models.IntegerField()
+    description = models.CharField(max_length=100)
 
     def __unicode__(self):
-	return str(printer_id)	    
+	   return str(self.printer_id)	    
     
 class User(models.Model):
     user_id = models.IntegerField(primary_key=True)
@@ -25,4 +21,16 @@ class User(models.Model):
     printers = models.ManyToManyField(Printer)
 
     def __unicode__(self):
-    	return str(user_name)
+    	return str(self.user_name)
+
+class PrinterLog(models.Model):
+    log_id = models.IntegerField(primary_key=True)
+    global_counter = models.IntegerField()
+    counter_print_bw = models.IntegerField()
+    counter_print_color = models.IntegerField()
+    counter_copy_bw = models.IntegerField()
+    counter_copy_color = models.IntegerField()
+    fk_printer = models.ForeignKey(Printer)
+
+    def __unicode__(self):
+        return str(self.log_id)
