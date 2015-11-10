@@ -8,7 +8,7 @@ class Printer(models.Model):
     description = models.CharField(max_length=100)
 
     def __unicode__(self):
-	   return str(self.printer_id)	    
+	   return str(self.description)	    
     
 class User(models.Model):
     user_id = models.IntegerField(primary_key=True)
@@ -25,6 +25,7 @@ class User(models.Model):
 
 class PrinterLog(models.Model):
     log_id = models.IntegerField(primary_key=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     global_counter = models.IntegerField()
     counter_print_bw = models.IntegerField()
     counter_print_color = models.IntegerField()
@@ -33,4 +34,4 @@ class PrinterLog(models.Model):
     fk_printer = models.ForeignKey(Printer)
 
     def __unicode__(self):
-        return str(self.log_id)
+        return str(self.fk_printer)

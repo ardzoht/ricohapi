@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, IntegerField
+from rest_framework.serializers import ModelSerializer, IntegerField, ReadOnlyField
 from api.models import Printer, User, PrinterLog
 # Create your views here.
 
@@ -22,6 +22,8 @@ class UserSerializer(ModelSerializer):
 				  'printers')
 
 class PrinterLogSerializer(ModelSerializer):
+	log_id = ReadOnlyField()
+
 	class Meta:
 		model = PrinterLog
 		fields = ('log_id', 'global_counter', 'counter_print_bw', 'counter_print_color',

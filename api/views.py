@@ -8,7 +8,6 @@ from rest_framework import viewsets
 class PrinterLog(viewsets.ModelViewSet):
 	queryset = PrinterLog.objects.all()
 	serializer_class = PrinterLogSerializer
-	paginate_by = 10
 
 class Printers(viewsets.ModelViewSet):
 	queryset = Printer.objects.all()
@@ -17,4 +16,3 @@ class Printers(viewsets.ModelViewSet):
 class User(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
-	
