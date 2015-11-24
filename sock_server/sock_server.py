@@ -1,8 +1,8 @@
-__author__ = 'ardzoht'
+__author__ = 'cita'
 from socket import socket, AF_INET, SOCK_DGRAM
 import sys
 import time
-
+from models import MessageProcessor
 PORT = 4582
 
 def socket_server(address):
@@ -31,7 +31,9 @@ def socket_server(address):
 	msg_list = msg.split('\n')
 	print msg_list
         print('Got message from', addr)
-
+        processor = MessageProcessor.MessageProcessor()
+        processor.process_message(msg)
+        print msg
         sock.sendto('OK', addr)
 
 if __name__ == '__main__':
