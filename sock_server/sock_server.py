@@ -31,7 +31,7 @@ def socket_server(address):
 	msg_list = msg.split('\n')
 	print msg_list
         print('Got message from', addr)
-        processor = MessageProcessor.MessageProcessor()
+        processor = MessageProcessor()
         processor.process_message(msg)
         print msg
         sock.sendto('OK', addr)

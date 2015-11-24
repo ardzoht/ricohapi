@@ -74,6 +74,8 @@ class MessageProcessor:
 			printer_id = info[4]
 			if event_type2 == 'C_CL':
 				counter_copy_color += 1
+			if event_type2 == 'C_BW':
+				counter_copy_bw += 1
 			events.append(info)
 
 		print "Events -> ", events
@@ -82,9 +84,3 @@ class MessageProcessor:
 		log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, int(printer_id))
 		log.upload()
 
-
-processor = MessageProcessor()
-test_message = """02012497006972370%v1234567890%
-1911151333%ADMIN%COPY%C_CL%1234567
-0"""
-processor.process_message(test_message)
