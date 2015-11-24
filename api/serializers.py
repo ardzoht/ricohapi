@@ -26,5 +26,5 @@ class PrinterLogSerializer(ModelSerializer):
 
 	class Meta:
 		model = PrinterLog
-		fields = ('log_id', 'global_counter', 'counter_print_bw', 'counter_print_color',
-			      'counter_copy_bw', 'counter_copy_color', 'fk_printer')
+		fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color',
+			      'counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer')

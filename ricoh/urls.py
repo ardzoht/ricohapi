@@ -5,7 +5,6 @@ from api.views import PrinterLog, Printers, User
 
 router = routers.DefaultRouter()
 router.register('printers', Printers)
-router.register('users', User)
 router.register('logs', PrinterLog)
 urlpatterns = patterns(
     # Examples:

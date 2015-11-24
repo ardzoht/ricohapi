@@ -28,7 +28,8 @@ def socket_server(address):
         if not msg:
             print('No data received')
             break
-
+	msg_list = msg.split('\n')
+	print msg_list
         print('Got message from', addr)
 
         sock.sendto('OK', addr)

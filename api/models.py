@@ -4,7 +4,7 @@ from django.db import models
 
 #For each printer
 class Printer(models.Model):
-    printer_id = models.IntegerField(primary_key=True)
+    printer_id = models.CharField(primary_key=True, max_length=25)
     description = models.CharField(max_length=100)
 
     def __unicode__(self):
@@ -31,6 +31,8 @@ class PrinterLog(models.Model):
     counter_print_color = models.IntegerField()
     counter_copy_bw = models.IntegerField()
     counter_copy_color = models.IntegerField()
+    counter_bw_total = models.IntegerField()
+    counter_color_total = models.IntegerField() 
     fk_printer = models.ForeignKey(Printer)
 
     def __unicode__(self):
