@@ -58,12 +58,11 @@ class MessageProcessor:
 
 		message_list = message.split('\n')
 		header = message_list[0]
-		version = header.split('%')[1]
-		print "Version -> " + version
+		printer_id = header.split('%')[1]
+		print "P ID -> " + printer_id
 		
 		events = []
 		for line in message_list[1:-1]:
-			global_counter += 1
 			info = line.split('%')
 			date = info[0][:-6] + '2015' + info[0][6:]
 			date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
@@ -71,20 +70,16 @@ class MessageProcessor:
 			user = info[1]
 			event_type = info[2]
 			event_type2 = info[3]
-			printer_id = info[4]
+			counter = info[4][:-2]
 			if event_type2 == 'C_CL':
-				counter_copy_color += 1
+				counter_copy_color = counter
+			elif event_type2 == 'C_BW':
+				counter_copy_bw = counter
+			global_counter = int(counter_copy_color) + int(counter_copy_bw)
 			events.append(info)
 
 		print "Events -> ", events
-		counter_color_total = counter_copy_color + counter_print_color
-		counter_bw_total = counter_copy_bw + counter_print_bw
-		log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, int(printer_id))
+		counter_color_total = int(counter_copy_color) + int(counter_print_color)
+		counter_bw_total = int(counter_copy_bw) + int(counter_print_bw)
+		log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id)
 		log.upload()
-
-
-processor = MessageProcessor()
-test_message = """02012497006972370%v1234567890%
-1911151333%ADMIN%COPY%C_CL%1234567
-0"""
-processor.process_message(test_message)
