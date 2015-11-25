@@ -11,6 +11,8 @@ def socket_server(address):
         #Creates socket with UDP Protocol
         sock = socket(AF_INET, SOCK_DGRAM)
         print 'Socket created'
+        response = None
+
     #In case of an error with the socket creation, print the error code
     except socket.error, msg:
         print 'Failed to create socket. Error Code : ' + str (msg[0]) + ' Message ' + msg[1]
@@ -30,10 +32,16 @@ def socket_server(address):
             break
 
         print('Got message from', addr)
-        processor = MessageProcessor.MessageProcessor()
-        processor.process_message(msg)
-        print msg
-        sock.sendto('OK', addr)
+        print msg[:2]
+        
+        if msg[:2] == '01':
+            response = '0'
+        else:
+            response = '010'
+            processor = MessageProcessor.MessageProcessor()
+            processor.process_message(msg)
+
+        sock.sendto(response, addr)
 
 if __name__ == '__main__':
     socket_server(('', PORT))
