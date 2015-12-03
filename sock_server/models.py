@@ -22,7 +22,7 @@ class Log:
 
 	def upload(self):
 		headers = {'Content-Type': "application/json"}
-		r = requests.post("http://riego.chi.itesm.mx:8081/api/logs/", data=self.to_json(), 
+		r = requests.post("http://riego.chi.itesm.mx:8081/api/logs/", data=self.to_json(),
         				  headers=headers)
 		print self.to_json(), r.status_code
 
@@ -31,7 +31,7 @@ class User:
 	def __init__(self, message=None):
 		#efine message slicing by protocol structure
 
-		#Using dummy data 
+		#Using dummy data
 		self.total_counter = 0
 		self.user_counter_print_bw = 0
 		self.user_counter_print_color = 0
@@ -60,27 +60,23 @@ class MessageProcessor:
 		header = message_list[0]
 		printer_id = header.split('%')[1]
 		print "P ID -> " + printer_id
-		
+
 		events = []
-		for line in message_list[1:-1]:
-			info = line.split('%')
-			date = info[0][:-6] + '2015' + info[0][6:]
-			date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
-			info[0] = date
-			user = info[1]
-			event_type = info[2]
-			event_type2 = info[3]
-			counter = info[4][:-2]
-			if event_type2 == 'C_CL':
-				counter_copy_color = counter
-			elif event_type2 == 'C_BW':
-				counter_copy_bw = counter
-			global_counter = int(counter_copy_color) + int(counter_copy_bw)
-			events.append(info)
+
+		line = message_list[1]
+		info = line.split('%')
+		date = info[0][:-6] + '2015' + info[0][6:]
+		date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
+		info[0] = date
+		global_counter = info[1]
+		counter_print_color = info[2]
+		counter_print_bw = info[3]
+		counter_copy_color = info[4]
+		counter_copy_bw = info[5]
+		counter_color_total = int(counter_print_color) + int(counter_copy_color)
+		counter_bw_total = int(counter_print_bw) + int(counter_copy_bw)
+		events.append(info)
 
 		print "Events -> ", events
-		counter_color_total = int(counter_copy_color) + int(counter_print_color)
-		counter_bw_total = int(counter_copy_bw) + int(counter_print_bw)
 		log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id)
 		log.upload()
-
