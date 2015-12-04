@@ -35,15 +35,13 @@ def socket_server(address):
 
         print('Got message from', addr)
         print msg[:2]
-
+	response = chr(13) + chr(10) + '010'
         if msg[:2] == '01':
-            response = '0'
-            sock.sendto('0', addr)
+            sock.sendto(response, addr)
         else:
-            response = '010'
-            processor = MessageProcessor.MessageProcessor()
+            processor = MessageProcessor()
             processor.process_message(msg)
-            sock.sendto('010', addr)
+            sock.sendto(response, addr)
 
 if __name__ == '__main__':
     socket_server(('', PORT))
