@@ -35,7 +35,7 @@ def socket_server(address):
 
         print('Got message from', addr)
         print msg[:2]
-	response = chr(13) + chr(10) + '010'
+	response = '010' + chr(13) + chr(10)
         if msg[:2] == '01':
             sock.sendto(response, addr)
         else:

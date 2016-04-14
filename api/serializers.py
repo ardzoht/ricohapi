@@ -6,7 +6,7 @@ from django.core.mail import send_mail
 class PrinterSerializer(ModelSerializer):
 	class Meta:
 		model = Printer
-		fields = ('printer_id', 'description')
+		fields = ('printer_id', 'description', 'emailReport', 'cutDate')
 
 class UserSerializer(ModelSerializer):
 
@@ -24,20 +24,43 @@ class UserSerializer(ModelSerializer):
 
 class PrinterLogSerializer(ModelSerializer):
 	log_id = ReadOnlyField()
-
-	class Meta:
+	
+        class Meta:
 		model = PrinterLog
-		fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color','counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer')
-
-	toEmail = 'nfc.dev.cita@gmail.com'
-	fromMail = 'nfc.dev.cita@gmail.com'
-	message = "Total B&W: " + total_black_white + "\nTotal Color: " + total_color + "\nPrinter B&W Counter: " + print_black_white_counter + "\nPrinter Color Counter: " + print_color_counter + "\nCopier B&W Counter: " + copy_black_white_counter + "\nCopier Color Counter: " + copy_color_counter
+		fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color','counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer', 'counter_fax_bw', 'counter_fax_color', 'counter_toner_black', 'counter_toner_cyan', 'counter_toner_magenta', 'counter_toner_yellow')
 
         def save(self):
-                total_black_white = str(IntegerField(source='counter_bw_total'))
-                total_color = str(IntegerField(source='counter_color_total'))
-                print_black_white_counter = str(IntegerField(source='counter_print_bw'))
-                print_color_counter = str(IntegerField(source='counter_print_color'))
-                copy_black_white_counter = str(IntegerField(source='counter_copy_bw'))
-                copy_color_counter = str(IntegerField(source='counter_copy_color'))
-                send_mail(to=toEmail, from=fromEmail, message=message)
+	    fromMail = 'nfc.dev.cita@gmail.com'
+ 
+            copy_color_counter = str(self.validated_data['counter_copy_color'])
+            copy_black_white_counter = str(self.validated_data['counter_copy_bw'])
+            print_color_counter = str(self.validated_data['counter_print_color'])
+	    total_black_white = str(self.validated_data['counter_bw_total'])
+            total_color = str(self.validated_data['counter_color_total'])
+       	    print_black_white_counter = str(self.validated_data['counter_print_bw'])
+            print_id = str(self.validated_data['fk_printer'])
+	    fax_black_white_counter = str(self.validated_data['counter_fax_bw'])
+	    fax_color_counter = str(self.validated_data['counter_fax_color'])
+	    toner_black_counter = str(self.validated_data['counter_toner_black'])
+	    toner_cyan_counter = str(self.validated_data['counter_toner_cyan'])
+	    toner_magenta_counter = str(self.validated_data['counter_toner_magenta'])
+	    toner_yellow_counter = str(self.validated_data['counter_toner_yellow'])
+            b = Printer.objects.get(printer_id=(print_id))
+            email = b.emailReport
+
+            obj = PrinterLog(counter_copy_color=self.validated_data['counter_copy_color'], counter_copy_bw=self.validated_data['counter_copy_bw'], counter_print_color=self.validated_data['counter_print_color'], counter_bw_total=self.validated_data['counter_bw_total'], counter_color_total=self.validated_data['counter_color_total'], counter_print_bw=self.validated_data['counter_print_bw'], fk_printer=self.validated_data['fk_printer'], counter_fax_bw=self.validated_data['counter_fax_bw'], counter_fax_color=self.validated_data['counter_fax_color'], counter_toner_black=self.validated_data['counter_toner_black'], counter_toner_cyan=self.validated_data['counter_toner_cyan'], counter_toner_magenta=self.validated_data['counter_toner_magenta'], counter_toner_yellow=self.validated_data['counter_toner_yellow'])
+            obj.save()
+            
+            if toner_black_counter == "-3":
+                toner_black_counter = "Low Level: under 20 percent"
+            if toner_cyan_counter == "-3":
+                toner_cyan_counter = "Low Level: under 20 percent"
+            if toner_magenta_counter == "-3":
+                toner_magenta_counter = "Low Level: under 20 percent"
+            if toner_yellow_counter == "-3":
+                toner_yellow_counter = "Low Level: under 20 percent"
+            
+	    message = "The current counters of the MFP (" + print_id + ") are the following: " + "\n\nTotal B&W: " + total_black_white + "\nTotal Color: " + total_color + "\nPrinter B&W Counter: " + print_black_white_counter + "\nPrinter Color Counter: " + print_color_counter + "\nCopier B&W Counter: " + copy_black_white_counter + "\nCopier Color Counter: " + copy_color_counter + "\nFax B&W Counter: " + fax_black_white_counter + "\nFax Color Counter: " + fax_color_counter + "\nBlack Toner Counter: " + toner_black_counter + "\nCyan Toner Counter: " + toner_cyan_counter + "\nMagenta Toner Counter: " + toner_magenta_counter + "\nYellow Toner Counter: " + toner_yellow_counter 
+            subject = "MPF Counters Update: " + print_id + ""
+            #send_mail(subject, message, fromMail, ['raime.bustos@gmail.com','antonio-hdez@live.com','carlos.me@outlook.com','dave.saenz.1892@gmail.com'], fail_silently=False) 
+            send_mail(subject, message, fromMail, [email], fail_silently=False)

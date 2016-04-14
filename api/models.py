@@ -6,9 +6,11 @@ from django.db import models
 class Printer(models.Model):
     printer_id = models.CharField(primary_key=True, max_length=25)
     description = models.CharField(max_length=100)
+    emailReport = models.CharField(max_length=40, default='nfc.dev.cita@gmail.com')
+    cutDate = models.IntegerField(default=1)
 
     def __unicode__(self):
-	   return str(self.description)	    
+           return str(self.printer_id)	    
     
 class User(models.Model):
     user_id = models.IntegerField(primary_key=True)
@@ -32,8 +34,14 @@ class PrinterLog(models.Model):
     counter_copy_bw = models.IntegerField()
     counter_copy_color = models.IntegerField()
     counter_bw_total = models.IntegerField()
-    counter_color_total = models.IntegerField() 
-    fk_printer = models.ForeignKey(Printer)
+    counter_color_total = models.IntegerField()
+    fk_printer = models.ForeignKey(Printer) 
+    counter_fax_bw = models.IntegerField(default=0)
+    counter_fax_color = models.IntegerField(default=0)
+    counter_toner_black = models.IntegerField(default=0)
+    counter_toner_cyan = models.IntegerField(default=0)
+    counter_toner_magenta = models.IntegerField(default=0)
+    counter_toner_yellow = models.IntegerField(default=0)
 
     def __unicode__(self):
         return str(self.fk_printer)
