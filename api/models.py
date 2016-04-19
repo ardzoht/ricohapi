@@ -6,7 +6,7 @@ from django.db import models
 class Printer(models.Model):
     printer_id = models.CharField(primary_key=True, max_length=25)
     description = models.CharField(max_length=100)
-    emailReport = models.CharField(max_length=40, default='nfc.dev.cita@gmail.com')
+    emailReport = models.CharField(max_length=450, default='nfc.dev.cita@gmail.com;')
     cutDate = models.IntegerField(default=1)
 
     def __unicode__(self):
