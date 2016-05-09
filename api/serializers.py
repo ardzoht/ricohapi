@@ -72,22 +72,6 @@ class PrinterLogSerializer(ModelSerializer):
             elif toner_yellow_counter == "-100":
                 toner_yellow_counter = "Low Level: under 10% of toner"
 
-            if copy_color_counter == "200":
-                copy_color_counter = "Couldn't retrieve this data"
-            if copy_black_white_counter == "200":
-                copy_black_white_counter = "Couldn't retrieve this data"
-            if print_color_counter == "200":
-                print_color_counter = "Couldn't retrieve this data"
-            if total_black_white == "200":
-                total_black_white = "Couldn't retrieve this data"
-            if total_color == "200":
-                total_color = "Couldn't retrieve this data"
-            if print_black_white_counter == "200":
-                print_black_white_counter = "Couldn't retrieve this data"            
-            if fax_black_white_counter == "200":
-                fax_black_white_counter = "Couldn't retrieve this data"
-            if fax_color_counter == "200":
-                fax_color_counter = "Couldn't retrieve this data"
             if toner_black_counter == "200":
                 toner_black_counter = "Couldn't retrieve this data"
             if toner_cyan_counter == "200":
