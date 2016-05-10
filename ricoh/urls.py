@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from rest_framework import routers
-from api.views import PrinterLog, Printers, User
+from api.views import PrinterLog, Printers
 
 router = routers.DefaultRouter()
 router.register('printers', Printers)

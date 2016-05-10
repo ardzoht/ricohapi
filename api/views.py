@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from api.serializers import PrinterSerializer, PrinterLogSerializer, UserSerializer
-from api.models import Printer, User, PrinterLog
+from api.serializers import PrinterSerializer, PrinterLogSerializer
+from api.models import Printer, PrinterLog
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import viewsets
 
@@ -12,7 +12,3 @@ class PrinterLog(viewsets.ModelViewSet):
 class Printers(viewsets.ModelViewSet):
 	queryset = Printer.objects.all()
 	serializer_class = PrinterSerializer
-
-class User(viewsets.ModelViewSet):
-	queryset = User.objects.all()
-	serializer_class = UserSerializer
