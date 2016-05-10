@@ -4,13 +4,13 @@ from django.core.mail import send_mail
 # Create your views here.
 
 class PrinterSerializer(ModelSerializer):
-	class Meta:
-		model = Printer
-		fields = ('printer_id', 'description', 'emailReport', 'cutDate', 'client')
+    class Meta:
+        model = Printer
+        fields = ('printer_id', 'description', 'emailReport', 'cutDate', 'client')
 
 class PrinterLogSerializer(ModelSerializer):
-	log_id = ReadOnlyField()
-	
+    log_id = ReadOnlyField()
+    
         class Meta:
             model = PrinterLog
             fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color','counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer', 'counter_fax_bw', 'counter_fax_color', 'counter_toner_black', 'counter_toner_cyan', 'counter_toner_magenta', 'counter_toner_yellow')
@@ -41,17 +41,17 @@ class PrinterLogSerializer(ModelSerializer):
             if toner_black_counter == "-3":
                 toner_black_counter = "Level OK: over 10%% to 100%%"
             elif toner_black_counter == "-100":
-            	toner_black_counter = "Low Level: under 10%% of toner"
+                toner_black_counter = "Low Level: under 10%% of toner"
     
-        	if toner_cyan_counter == "-3": 
-            	toner_cyan_counter = "Level OK: over 10%% to 100%%"
-        	elif toner_cyan_counter == "-100":
+            if toner_cyan_counter == "-3": 
+                toner_cyan_counter = "Level OK: over 10%% to 100%%"
+            elif toner_cyan_counter == "-100":
                 toner_cyan_counter = "Low Level: under 10%% of toner"
             
             if toner_magenta_counter == "-3":
                 toner_magenta_counter = "Level OK: over 10%% to 100%%"
             elif toner_magenta_counter == "-100":
-               	toner_magenta_counter = "Low Level: under 10%% of toner"
+                toner_magenta_counter = "Low Level: under 10%% of toner"
             
             if toner_yellow_counter == "-3":
                 toner_yellow_counter = "Level OK: over 10%% to 100%%"
