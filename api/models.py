@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-#For each printer
+#For each printer: PrinterId, Description, emails, cut Date, Client
 class Printer(models.Model):
     printer_id = models.CharField(primary_key=True, max_length=25)
     description = models.CharField(max_length=100)
@@ -11,8 +11,9 @@ class Printer(models.Model):
     client = models.CharField(max_length=30, default='CITA')
 
     def __unicode__(self):
-           return str(self.printer_id)	    
-    
+           return str(self.printer_id)
+	    
+#Logs for each printer: These are all Integers, since they are numbers or codes   
 class PrinterLog(models.Model):
     log_id = models.IntegerField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)
