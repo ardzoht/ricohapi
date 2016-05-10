@@ -4,59 +4,23 @@
 
 {% block content %}
 
-{% url 'dashboard' as the_url %}
-
-
-<div class="mdl-layout mdl-js-layout">
-  <header class="mdl-layout__header mdl-layout__header--scroll">
-    <div class="mdl-layout__header-row">
-      <!-- Title -->
-        <span class="mdl-layout-title">      
-          <a style="color:inherit; text-decoration:none;" href="{{ the_url }}">Dashboard</a>
-        </span>
-      <!-- Add spacer, to align navigation to the right -->
-      <div class="mdl-layout-spacer"></div>
-      <!-- Navigation -->
-      <nav class="mdl-navigation">
-
-       <form action="/dashboard/" method="get">
-        <div class="mdl-textfield mdl-js-textfield">
-          <input class="mdl-textfield__input" id="input" type="text" value="" name="q" />
-          <label id="label" style="color:#FFF"class="mdl-textfield__label" for="input">Search</label>
-          </div>
-            <select id="dropdown" name="dropdown" onchange="changeType()">
-              <option value="log">Log Id</option>
-              <option value="date">Date</option>
-              <option value="printer">Printer Id</option>
-            </select>
-            <button type="submit" value="Search"class="mdl-button mdl-js-button mdl-button--raised">
-              Search
-            </button>
-        </form>
-
-      </nav>
-    </div>
-  </header>
-
-  <main class="mdl-layout__content">
-    <div class="page-content table">
-         <table width="400" class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+         <table class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
            <thead>
              <tr>
-             <th class="fullwidth">ID</th>
-               <th class="fullwidth">Timestamp</th>
-               <th class="fullwidth">Printer Id</th>
-               <th class="fullwidth">Global Counter</th>
-               <th class="fullwidth">PT B&W</th>
-               <th class="fullwidth">PT Color</th>
-               <th class="fullwidth">CP B&W</th>
-               <th class="fullwidth">CP Color</th>
-               <th class="fullwidth">Color total</th>
-               <th class="fullwidth">Fax B&W</th>
-               <th class="fullwidth">Toner Black</th>
-               <th class="fullwidth">Toner Cyan</th>
-               <th class="fullwidth">Toner Magenta</th>
-               <th class="fullwidth">Toner Yellow</th>
+               <th>ID</th>
+               <th>Timestamp</th>
+               <th>Printer Id</th>
+               <th>Global Counter</th>
+               <th>PT B&W</th>
+               <th>PT Color</th>
+               <th>CP B&W</th>
+               <th>CP Color</th>
+               <th>Color total</th>
+               <th>Fax B&W</th>
+               <th>Toner Black</th>
+               <th>Toner Cyan</th>
+               <th>Toner Magenta</th>
+               <th>Toner Yellow</th>
              </tr>
            </thead>
 
@@ -83,32 +47,6 @@
 
            </tbody>
          </table>
-    </div>
-  </main>
-</div>
-
-   <script>
-   function changeType(){
-       var select = document.getElementById("dropdown");      
-       var input = document.getElementById("input");
-       var label = document.getElementById("label");
-       if (select.value === "date") {
-         input.setAttribute("type", "date");
-         label.innerHTML = "";
-       }
-       else if (select.value == "log") {
-         input.setAttribute("type", "number");
-         label.innerHTML = "Search";
-
-       }
-       else {
-        input.setAttribute("type" , "text");
-        label.innerHTML = "Search";
-
-       }
-
-   }
-   </script>
 
 {% endblock %}
 
