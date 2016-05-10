@@ -1,12 +1,8 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from api.serializers import PrinterSerializer, PrinterLogSerializer, UserSerializer
 from api.models import Printer, User
 from api.models import PrinterLog as Logs
-=======
 from api.serializers import PrinterSerializer, PrinterLogSerializer
-from api.models import Printer, PrinterLog
->>>>>>> ardzoht/master
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import viewsets
 from django.views.generic import ListView
@@ -19,7 +15,6 @@ class PrinterLog(viewsets.ModelViewSet):
 class Printers(viewsets.ModelViewSet):
 	queryset = Printer.objects.all()
 	serializer_class = PrinterSerializer
-<<<<<<< HEAD
 
 class User(viewsets.ModelViewSet):
 	queryset = User.objects.all()
@@ -68,9 +63,3 @@ class Connection(ListView):
         connection.reverse()
         context["connected"] = connection
         return context
-
-
-
-
-=======
->>>>>>> ardzoht/master
