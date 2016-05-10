@@ -16,7 +16,7 @@ class PrinterLogSerializer(ModelSerializer):
 		fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color','counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer', 'counter_fax_bw', 'counter_fax_color', 'counter_toner_black', 'counter_toner_cyan', 'counter_toner_magenta', 'counter_toner_yellow')
 
         def save(self):
-	    	fromMail = 'nfc.dev.cita@gmail.com' 
+		fromMail = 'nfc.dev.cita@gmail.com' 
 		globalCounter = str(self.validated_data['global_counter'])
 		copy_color_counter = str(self.validated_data['counter_copy_color'])
 		copy_black_white_counter = str(self.validated_data['counter_copy_bw'])
