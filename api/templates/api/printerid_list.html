@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+
+         <table class="mdl-data-table mdl-js-data-table mdl-shadow--3dp">
+           <thead>
+             <tr>
+               <th>Printer Id</th>
+               <th>Connection state</th>
+             </tr>
+           </thead>
+
+           <tbody>
+
+           {% for printer in object_list %}
+             <tr>
+             <td>{{printer.printer_id}}</td>
+             <td>connected</td>
+                        </tr>
+             {% endfor %}
+
+           </tbody>
+         </table>
+
+{% endblock %}
+
+

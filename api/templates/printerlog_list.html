@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="mdl-grid">
+<div id="dvData" class="mdl-cell mdl-cell--6-col mdl-cell--2-col-tablet mdl-cell--2-col-phone">
+
+  <div class='button'>
+                <a href="#" id ="export" role='button'>Export Table Data into a CSV File
+                </a>
+            </div>
+            
+     <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+       <thead>
+         <tr>
+          <th>Client</th>
+           <th>Date</th>
+           <th>Printer</th>
+           <th>PT Color</th>
+           <th>CP Color</th>
+           <th>Color Total</th>
+           <th>PT B&W</th>
+           <th>CP B&W</th>
+           <th>B & W total</th>
+           <th>Toner Black</th>
+           <th>Toner Cyan</th>
+           <th>Toner Magenta</th>
+           <th>Toner Yellow</th>
+         </tr>
+       </thead>
+
+       <tbody>
+
+       {% for log in object_list %}
+         <tr>
+         <td>{{log.fk_printer.client}}</td>
+         <td>{{log.timestamp}}</td>
+           <td> {{ log.fk_printer }} </td>
+           <td>{{log.counter_print_color}}</td>
+           <td>{{log.counter_copy_color}}</td>
+           <td>{{log.counter_color_total}}</td>
+           <td>{{log.counter_print_bw}}</td>
+           <td>{{log.counter_copy_bw}}</td>
+           <td>{{log.counter_bw_total}}</td>
+           <td>{{log.counter_toner_black}}</td>
+           <td>{{log.counter_toner_cyan}}</td>
+           <td>{{log.counter_toner_magenta}}</td>
+           <td>{{log.counter_toner_yellow}}</td>
+         </tr>
+         {% endfor %}
+
+           <tr>
+         <td>Totals</td>
+         <td>N/A</td>
+         <td>N/A</td>
+          <td>{{total.counter_print_color}}</td>
+          <td>{{total.counter_copy_color}}</td>
+          <td>{{total.counter_color_total}}</td>
+          <td>{{total.counter_print_bw}}</td>
+          <td>{{total.counter_copy_bw}}</td>
+          <td>{{total.counter_bw_total}}</td>
+          <td>{{total.counter_toner_black}}</td>
+          <td>{{total.counter_toner_cyan}}</td>
+          <td>{{total.counter_toner_magenta}}</td>
+          <td>{{total.counter_toner_yellow}}</td>
+         </tr>
+
+       </tbody>
+     </table>   
+     </div>      
+</div>
+{% endblock %}
+
+
+
