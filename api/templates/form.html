@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.demo-card-wide.mdl-card {
+  width: 512px;
+}
+.demo-card-wide > .mdl-card__title {
+  color: #fff;
+  height: 176px;
+  background: #3F51B5;
+}
+.demo-card-wide > .mdl-card__menu {
+  color: #fff;
+}
+
+.flex-container {
+  height:90vh;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center
+}
+.flex-item {
+  flex: 0 0 50px;
+}
+
+.button {
+  width: 100px;
+}
+</style>
+
+<form action="/log" method="get">
+ <div class="flex-container">
+
+ <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+   <div class="mdl-card__title">
+     <h2 class="mdl-card__title-text">Welcome</h2>
+   </div>
+   <div class="mdl-card__supporting-text">
+     Search information by client
+   </div>
+   <div class="mdl-card__actions mdl-card--border" style="text-align:center">
+     <div class="flex-container" style="height:100%">
+       <div>
+       <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+             Client
+           </a>
+        <select id="dropdown" name="q" onchange="changeType()">
+        {% for client in clients %}
+          <option>{{client.client}}</option>
+          {% endfor %}
+        </select>
+        <input class="flex-item" type="checkbox" name="cut" value="check" >Since cut date
+        </div>
+        <div>
+        <button type="submit" value="Search" class="flex-item mdl-button mdl-js-button mdl-button--raised">
+          Search
+        </button>
+        </div>
+      </div>
+    </div>
+    <div class="mdl-card__menu">
+      <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+        <i class="material-icons">search</i>
+      </button>
+    </div>
+   </div>
+  </div>
+ </form>
+
+ {% endblock %}
+
+

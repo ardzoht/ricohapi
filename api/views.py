@@ -4,7 +4,7 @@ from api.models import PrinterLog as Logs
 from api.serializers import PrinterSerializer, PrinterLogSerializer
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import viewsets
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 import datetime
 # Create your views here.
 class PrinterLog(viewsets.ModelViewSet):
@@ -15,22 +15,25 @@ class Printers(viewsets.ModelViewSet):
 	queryset = Printer.objects.all()
 	serializer_class = PrinterSerializer
 
-class Dashboard(ListView):
+class Dashboard(TemplateView):
+    template_name = "form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Dashboard, self).get_context_data(**kwargs)
+        context['clients'] = Printer.objects.values("client").distinct()
+        return context
+
+class Log(ListView):
     template_name = "printerlog_list.html"
     total_list = None
 
     def get_queryset(self):
         if self.request.method == 'GET' and 'q' in self.request.GET:
             q = self.request.GET['q']
-            option = self.request.GET['dropdown']
             check = self.request.GET.get('cut', False)
-            if q:
-                if option == 'log':
-                    try:
-                        return Logs.objects.filter(log_id=q)
-                    except ValueError:
-                        return Logs.objects.filter(log_id=None)
-                elif option == 'date':
+            if q and 'dropdown' in self.request.GET:
+                option = self.request.GET['dropdown']
+                if option == 'date':
                     q=q.split('-')
                     date_list = Logs.objects.filter(timestamp__year=q[0], timestamp__month=q[1], timestamp__day=q[2])
                     return date_list
@@ -46,19 +49,23 @@ class Dashboard(ListView):
                         client_list = self.get_cut_date(client_list, q, option)
                     return client_list
             else:
-                    return Logs.objects.order_by('timestamp')
+                client_list = Logs.objects.filter(fk_printer__client=q).order_by("timestamp")
+                if check == 'check' :
+                    client_list = self.get_cut_date(client_list, q, 'client')
+                return client_list
         else:
             return Logs.objects.order_by('timestamp')
 
     def get_cut_date(self, queryset, q, option):
-        latest = Printer.objects.filter(printer_id = q).latest('cutDate')
         if option == 'client':
             latest = Printer.objects.filter(client = q).latest('cutDate')
+        else:
+            latest = Printer.objects.filter(printer_id = q).latest('cutDate')
         now = datetime.datetime.now()
         return queryset.filter(timestamp__day__lte=latest.cutDate, timestamp__month=now.month)
 
     def get_context_data(self, **kwargs):
-        context = super(Dashboard, self).get_context_data(**kwargs)
+        context = super(Log, self).get_context_data(**kwargs)
         if self.total_list:
           total = {}
           earliest = self.total_list.values("counter_print_color", "counter_print_bw", 
@@ -75,7 +82,6 @@ class Dashboard(ListView):
           context["total"] = total
           return context
         return context;
-
 
 
 class Connection(ListView):

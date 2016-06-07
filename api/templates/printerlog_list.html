@@ -32,6 +32,22 @@
 
        <tbody>
 
+          <tr>
+        <td>Totals</td>
+        <td>N/A</td>
+        <td>N/A</td>
+         <td>{{total.counter_print_color}}</td>
+         <td>{{total.counter_copy_color}}</td>
+         <td>{{total.counter_color_total}}</td>
+         <td>{{total.counter_print_bw}}</td>
+         <td>{{total.counter_copy_bw}}</td>
+         <td>{{total.counter_bw_total}}</td>
+         <td>{{total.counter_toner_black}}</td>
+         <td>{{total.counter_toner_cyan}}</td>
+         <td>{{total.counter_toner_magenta}}</td>
+         <td>{{total.counter_toner_yellow}}</td>
+        </tr>
+        
        {% for log in object_list %}
          <tr>
          <td>{{log.fk_printer.client}}</td>
@@ -50,21 +66,6 @@
          </tr>
          {% endfor %}
 
-           <tr>
-         <td>Totals</td>
-         <td>N/A</td>
-         <td>N/A</td>
-          <td>{{total.counter_print_color}}</td>
-          <td>{{total.counter_copy_color}}</td>
-          <td>{{total.counter_color_total}}</td>
-          <td>{{total.counter_print_bw}}</td>
-          <td>{{total.counter_copy_bw}}</td>
-          <td>{{total.counter_bw_total}}</td>
-          <td>{{total.counter_toner_black}}</td>
-          <td>{{total.counter_toner_cyan}}</td>
-          <td>{{total.counter_toner_magenta}}</td>
-          <td>{{total.counter_toner_yellow}}</td>
-         </tr>
 
        </tbody>
      </table>   
