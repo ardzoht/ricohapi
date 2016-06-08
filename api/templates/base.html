@@ -42,20 +42,18 @@
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer">
               <nav class="mdl-navigation">
-                      <a class="mdl-navigation__link" href={{logs}}>Logs</a>
+                      <!--<a class="mdl-navigation__link" href={{logs}}>Logs</a> -->
                       <!--<a class="mdl-navigation__link" href={{connection}}>Connection</a> -->
                     </nav>
           </div>
           <!-- Navigation -->
           <nav class="mdl-navigation">
-           <form action="/dashboard/logs" method="get">
-
+           <form action="/log" method="get">
             <div class="mdl-textfield mdl-js-textfield">
               <input class="mdl-textfield__input" id="input" type="text" value="" name="q" />
               <label id="label" style="color:#FFF"class="mdl-textfield__label" for="input">Search</label>
               </div>
                 <select id="dropdown" name="dropdown" onchange="changeType()">
-                  <option value="log">Log Id</option>
                   <option value="date">Date</option>
                   <option value="printer">Printer Id</option>
                   <option value="client">Client</option>
@@ -73,8 +71,8 @@
       <div class="mdl-layout__drawer">
           <span class="mdl-layout-title">Dashboard</span>
           <nav class="mdl-navigation">
-            <a class="mdl-navigation__link" href="{{logs}}">Logs</a>
-            <a class="mdl-navigation__link" href="{{connection}}">Connection</a>
+           <!-- <a class="mdl-navigation__link" href="{{logs}}">Logs</a> -->
+           <!-- <a class="mdl-navigation__link" href="{{connection}}">Connection</a> -->
           </nav>
         </div>
 
@@ -94,11 +92,6 @@
            if (select.value === "date") {
              input.setAttribute("type", "date");
              label.innerHTML = "";
-           }
-           else if (select.value == "log") {
-             input.setAttribute("type", "number");
-             label.innerHTML = "Search";
-
            }
            else {
             input.setAttribute("type" , "text");

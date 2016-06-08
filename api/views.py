@@ -4,7 +4,7 @@ from api.models import PrinterLog as Logs
 from api.serializers import PrinterSerializer, PrinterLogSerializer
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import viewsets
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 import datetime
 # Create your views here.
 class PrinterLog(viewsets.ModelViewSet):
@@ -15,67 +15,88 @@ class Printers(viewsets.ModelViewSet):
 	queryset = Printer.objects.all()
 	serializer_class = PrinterSerializer
 
-class Dashboard(ListView):
+class Dashboard(TemplateView):
+    template_name = "form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Dashboard, self).get_context_data(**kwargs)
+        context['clients'] = Printer.objects.values("client").distinct()
+        return context
+
+class Log(ListView):
     template_name = "printerlog_list.html"
     total_list = None
+    title = ''
 
     def get_queryset(self):
         if self.request.method == 'GET' and 'q' in self.request.GET:
             q = self.request.GET['q']
-            option = self.request.GET['dropdown']
             check = self.request.GET.get('cut', False)
-            if q:
-                if option == 'log':
-                    try:
-                        return Logs.objects.filter(log_id=q)
-                    except ValueError:
-                        return Logs.objects.filter(log_id=None)
-                elif option == 'date':
+            if q and 'dropdown' in self.request.GET:
+                option = self.request.GET['dropdown']
+                if option == 'date':
                     q=q.split('-')
+                    self.title = 'Search by date'
                     date_list = Logs.objects.filter(timestamp__year=q[0], timestamp__month=q[1], timestamp__day=q[2])
+                    self.total_list = date_list
                     return date_list
                 elif option == 'printer':
+                    self.title = 'Search by printer'
                     printer_list = Logs.objects.filter(fk_printer=q).order_by("timestamp")
                     if check == 'check' :
                         printer_list =  self.get_cut_date(printer_list, q, option)
                     self.total_list = printer_list
                     return printer_list
                 elif option == 'client' :
+                    self.title = 'Search by client'
                     client_list = Logs.objects.filter(fk_printer__client=q).order_by("timestamp")
                     if check == 'check' :
                         client_list = self.get_cut_date(client_list, q, option)
+                    self.total_list = client_list
                     return client_list
             else:
-                    return Logs.objects.order_by('timestamp')
+                client_list = Logs.objects.filter(fk_printer__client=q).order_by("timestamp")
+                if check == 'check' :
+                    client_list = self.get_cut_date(client_list, q, 'client')
+                self.total_list = client_list
+                return client_list
         else:
-            return Logs.objects.order_by('timestamp')
+            return Logs.objects.order_by('-timestamp')
 
     def get_cut_date(self, queryset, q, option):
-        latest = Printer.objects.filter(printer_id = q).latest('cutDate')
         if option == 'client':
             latest = Printer.objects.filter(client = q).latest('cutDate')
+        else:
+            latest = Printer.objects.filter(printer_id = q).latest('cutDate')
         now = datetime.datetime.now()
-        return queryset.filter(timestamp__day__lte=latest.cutDate, timestamp__month=now.month)
+        return queryset.filter(timestamp__day__gte=1, timestamp__day__lte=latest.cutDate, timestamp__month=now.month)
 
     def get_context_data(self, **kwargs):
-        context = super(Dashboard, self).get_context_data(**kwargs)
+        context = super(Log, self).get_context_data(**kwargs)
         if self.total_list:
-          total = {}
-          earliest = self.total_list.values("counter_print_color", "counter_print_bw", 
-            "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
-             "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
-            "counter_toner_magenta").earliest("timestamp")
-
-          latest = self.total_list.values("counter_print_color", "counter_print_bw", 
-            "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
-             "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
-            "counter_toner_magenta").latest("timestamp")
-          for key in latest:
-              total[key] = latest[key] - earliest[key]
-          context["total"] = total
-          return context
+            ids = self.total_list.order_by('fk_printer').values_list('fk_printer').distinct()
+            total = {"counter_print_color": 0, "counter_print_bw":0, 
+                  "counter_copy_color":0, "counter_copy_bw":0, "counter_color_total":0, "counter_bw_total":0,
+                   "counter_toner_yellow":0, "counter_toner_cyan":0, "counter_toner_black":0, 
+                  "counter_toner_magenta":0}
+            print(ids)
+            for id in ids:  
+                total_id = {}
+                earliest = self.total_list.filter(fk_printer=id).values("counter_print_color", "counter_print_bw", 
+                  "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
+                   "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
+                  "counter_toner_magenta").earliest("timestamp")
+                latest = self.total_list.filter(fk_printer=id).values("counter_print_color", "counter_print_bw", 
+                  "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
+                   "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
+                  "counter_toner_magenta").latest("timestamp")
+                for key in latest:
+                    total_id[key] = latest[key] - earliest[key]
+                    total[key]+=total_id[key]
+            context['total'] = total 
+            return context
+        context['title'] = self.title
         return context;
-
 
 
 class Connection(ListView):
