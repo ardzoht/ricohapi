@@ -26,42 +26,45 @@ class Dashboard(TemplateView):
 class Log(ListView):
     template_name = "printerlog_list.html"
     total_list = None
-    title = ''
+    total = False
 
     def get_queryset(self):
         if self.request.method == 'GET' and 'q' in self.request.GET:
             q = self.request.GET['q']
             check = self.request.GET.get('cut', False)
+            total = self.request.GET.get('total', False)
+
             if q and 'dropdown' in self.request.GET:
                 option = self.request.GET['dropdown']
                 if option == 'date':
                     q=q.split('-')
-                    self.title = 'Search by date'
                     date_list = Logs.objects.filter(timestamp__year=q[0], timestamp__month=q[1], timestamp__day=q[2])
                     self.total_list = date_list
                     return date_list
                 elif option == 'printer':
-                    self.title = 'Search by printer'
                     printer_list = Logs.objects.filter(fk_printer=q).order_by("timestamp")
                     if check == 'check' :
                         printer_list =  self.get_cut_date(printer_list, q, option)
                     self.total_list = printer_list
                     return printer_list
                 elif option == 'client' :
-                    self.title = 'Search by client'
+                    self.total = True
                     client_list = Logs.objects.filter(fk_printer__client=q).order_by("timestamp")
                     if check == 'check' :
                         client_list = self.get_cut_date(client_list, q, option)
                     self.total_list = client_list
-                    return client_list
+                    return 
             else:
                 client_list = Logs.objects.filter(fk_printer__client=q).order_by("timestamp")
                 if check == 'check' :
                     client_list = self.get_cut_date(client_list, q, 'client')
                 self.total_list = client_list
+                if total == 'total':
+                    self.total = True
+                    return
                 return client_list
         else:
-            return Logs.objects.order_by('-timestamp')
+            return Logs.objects.order_by('timestamp')[:10]
 
     def get_cut_date(self, queryset, q, option):
         if option == 'client':
@@ -71,31 +74,36 @@ class Log(ListView):
         now = datetime.datetime.now()
         return queryset.filter(timestamp__day__gte=1, timestamp__day__lte=latest.cutDate, timestamp__month=now.month)
 
+    def get_logs_values(self, total_list, id):
+        return total_list.filter(fk_printer=id).values("fk_printer", "counter_print_color", "counter_print_bw", 
+                      "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
+                       "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
+                      "counter_toner_magenta", "timestamp")
+
     def get_context_data(self, **kwargs):
         context = super(Log, self).get_context_data(**kwargs)
         if self.total_list:
+            printer_list = []
             ids = self.total_list.order_by('fk_printer').values_list('fk_printer').distinct()
             total = {"counter_print_color": 0, "counter_print_bw":0, 
                   "counter_copy_color":0, "counter_copy_bw":0, "counter_color_total":0, "counter_bw_total":0,
                    "counter_toner_yellow":0, "counter_toner_cyan":0, "counter_toner_black":0, 
                   "counter_toner_magenta":0}
-            print(ids)
             for id in ids:  
                 total_id = {}
-                earliest = self.total_list.filter(fk_printer=id).values("counter_print_color", "counter_print_bw", 
-                  "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
-                   "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
-                  "counter_toner_magenta").earliest("timestamp")
-                latest = self.total_list.filter(fk_printer=id).values("counter_print_color", "counter_print_bw", 
-                  "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
-                   "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
-                  "counter_toner_magenta").latest("timestamp")
+                earliest = self.get_logs_values(self.total_list, id).earliest("timestamp")
+                latest = self.get_logs_values(self.total_list, id).latest("timestamp")
+                total_id["fk_printer"] = latest["fk_printer"]
                 for key in latest:
-                    total_id[key] = latest[key] - earliest[key]
-                    total[key]+=total_id[key]
+                    if key != "fk_printer" and key != "timestamp":
+                        total_id[key] = latest[key] - earliest[key]
+                        total[key] += total_id[key]
+                if self.total:
+                    total_id["logs"] = self.get_logs_values(self.total_list, id)[:10]
+                    printer_list.append(total_id)
+            context['total_printer'] = printer_list
             context['total'] = total 
             return context
-        context['title'] = self.title
         return context;
 
 
