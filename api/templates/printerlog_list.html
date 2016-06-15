@@ -65,6 +65,26 @@
           <td>{{printer.counter_toner_yellow}}</td>
         </tr>
 
+      {% endfor %}
+
+      {% for printer in total_printer %}
+        <tr>
+        <td>Total by printer</td>
+        <td> </td>
+          <td> {{printer.fk_printer}} </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+        </tr>
+
+
         {% for log in printer.logs %}
         <tr>
         <td>Log</td>
