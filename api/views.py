@@ -64,7 +64,8 @@ class Log(ListView):
                     return
                 return client_list
         else:
-            return Logs.objects.order_by('timestamp')[:10]
+            last = Logs.objects.order_by('-timestamp')[:10]
+            return reversed(last)
 
     def get_cut_date(self, queryset, q, option):
         if option == 'client':
@@ -99,7 +100,7 @@ class Log(ListView):
                         total_id[key] = latest[key] - earliest[key]
                         total[key] += total_id[key]
                 if self.total:
-                    total_id["logs"] = self.get_logs_values(self.total_list, id)[:10]
+                    total_id["logs"] = self.get_logs_values(self.total_list, id)[:10][::-1]
                     printer_list.append(total_id)
             context['total_printer'] = printer_list
             context['total'] = total 
