@@ -35,7 +35,7 @@
            <tr>
          <td>Totals</td>
          <td>N/A</td>
-         <td>N/A</td>
+         <td>All Printers</td>
           <td>{{total.counter_print_color}}</td>
           <td>{{total.counter_copy_color}}</td>
           <td>{{total.counter_color_total}}</td>
@@ -69,7 +69,7 @@
  
        {% for printer in total_printer %}
          <tr>
-         <td>Total by printer</td>
+         <td>Latest 10 logs from: </td>
          <td> </td>
            <td> {{printer.fk_printer}} </td>
            <td> </td>
@@ -88,7 +88,7 @@
           {% for log in printer.logs %}
           <tr>
           <td>Log</td>
-         <td> {{log.timestamp}} </td>
+         <td> {{log.timestamp|date:"m/d/Y H:i"}} </td>
            <td> {{log.fk_printer}}</td>
            <td>{{log.counter_print_color}}</td>
            <td>{{log.counter_copy_color}}</td>
@@ -109,7 +109,7 @@
         {% for log in object_list %}
           <tr>
           <td>{{log.fk_printer.client}}</td>
-          <td>{{log.timestamp}}</td>
+          <td>{{ log.timestamp }}</td>
             <td> {{ log.fk_printer }} </td>
             <td>{{log.counter_print_color}}</td>
             <td>{{log.counter_copy_color}}</td>

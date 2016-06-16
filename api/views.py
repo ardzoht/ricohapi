@@ -99,6 +99,7 @@ class Log(ListView):
                 total_id = {}
                 earliest = self.get_logs_values(self.total_list, id).earliest("timestamp")
                 latest = self.get_logs_values(self.total_list, id).latest("timestamp")
+                print(latest['timestamp'])
                 total_id["fk_printer"] = latest["fk_printer"]
                 for key in latest:
                     if key != "fk_printer" and key != "timestamp":
