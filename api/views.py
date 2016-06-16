@@ -64,8 +64,7 @@ class Log(ListView):
                     return
                 return client_list
         else:
-            last = Logs.objects.order_by('-timestamp')[:10]
-            return reversed(last)
+            return Logs.objects.last('timestamp')[:10]
 
     def get_cut_date(self, queryset, q, option):
         if option == 'client':
@@ -80,6 +79,12 @@ class Log(ListView):
                       "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
                        "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
                       "counter_toner_magenta", "timestamp")
+
+    def get_last_ten_logs_values(self, total_list, id):
+        return total_list.filter(fk_printer=id).values("fk_printer", "counter_print_color", "counter_print_bw", 
+                      "counter_copy_color", "counter_copy_bw", "counter_color_total", "counter_bw_total",
+                       "counter_toner_yellow", "counter_toner_cyan", "counter_toner_black", 
+                      "counter_toner_magenta", "timestamp").reverse()[:10]
 
     def get_context_data(self, **kwargs):
         context = super(Log, self).get_context_data(**kwargs)
@@ -100,7 +105,7 @@ class Log(ListView):
                         total_id[key] = latest[key] - earliest[key]
                         total[key] += total_id[key]
                 if self.total:
-                    total_id["logs"] = self.get_logs_values(self.total_list, id)[:10][::-1]
+                    total_id["logs"] = self.get_last_ten_logs_values(self.total_list, id)
                     printer_list.append(total_id)
             context['total_printer'] = printer_list
             context['total'] = total 
