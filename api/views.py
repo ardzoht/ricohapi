@@ -72,7 +72,9 @@ class Log(ListView):
         else:
             latest = Printer.objects.filter(printer_id = q).latest('cutDate')
         now = datetime.datetime.now()
-        return queryset.filter(timestamp__day__gte=1, timestamp__day__lte=latest.cutDate, timestamp__month=now.month)
+        first = now.replace(day=1)
+        lastMonth = first - datetime.timedelta(days=1)
+        return queryset.filter(timestamp__gte=datetime.date(lastMonth.year, lastMonth.month, latest.cutDate), timestamp__lte=datetime.date(now.year, now.month, latest.cutDate))
 
     def get_logs_values(self, total_list, id):
         return total_list.filter(fk_printer=id).values("fk_printer", "counter_print_color", "counter_print_bw", 
