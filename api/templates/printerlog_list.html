@@ -1,96 +1,95 @@
 {% extends "base.html" %}
-
-
-
-{% block content %}
-<div class="mdl-grid">
-<div id="dvData" class="mdl-cell mdl-cell--6-col mdl-cell--2-col-tablet mdl-cell--2-col-phone">
-
-  <div class='button'>
-                <a href="#" id ="export" role='button'>Export Table Data into a CSV File
-                </a>
-            </div>
-            
-     <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-       <thead>
-         <tr>
-          <th>Client</th>
-           <th>Date</th>
-           <th>Printer</th>
-           <th>PT Color</th>
-           <th>CP Color</th>
-           <th>Color Total</th>
-           <th>PT B&W</th>
-           <th>CP B&W</th>
-           <th>B & W total</th>
-           <th>Toner Black</th>
-           <th>Toner Cyan</th>
-           <th>Toner Magenta</th>
-           <th>Toner Yellow</th>
-         </tr>
-       </thead>
-
-       <tbody>
-
+ 
+ 
+ 
+ {% block content %}
+ <div class="mdl-grid">
+ <div id="dvData" class="mdl-cell mdl-cell--6-col mdl-cell--2-col-tablet mdl-cell--2-col-phone">
+ 
+   <div class='button'>
+                 <a href="#" id ="export" role='button'>Export Table Data into a CSV File
+                 </a>
+             </div>
+             
+      <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+        <thead>
           <tr>
-        <td>Totals</td>
-        <td>N/A</td>
-        <td>N/A</td>
-         <td>{{total.counter_print_color}}</td>
-         <td>{{total.counter_copy_color}}</td>
-         <td>{{total.counter_color_total}}</td>
-         <td>{{total.counter_print_bw}}</td>
-         <td>{{total.counter_copy_bw}}</td>
-         <td>{{total.counter_bw_total}}</td>
-         <td>{{total.counter_toner_black}}</td>
-         <td>{{total.counter_toner_cyan}}</td>
-         <td>{{total.counter_toner_magenta}}</td>
-         <td>{{total.counter_toner_yellow}}</td>
-        </tr>
-
-        {% for printer in total_printer %}
-        <tr>
-        <td>Total by printer</td>
-        <td> N/A </td>
-          <td> {{printer.fk_printer}}</td>
-          <td>{{printer.counter_print_color}}</td>
-          <td>{{printer.counter_copy_color}}</td>
-          <td>{{printer.counter_color_total}}</td>
-          <td>{{printer.counter_print_bw}}</td>
-          <td>{{printer.counter_copy_bw}}</td>
-          <td>{{printer.counter_bw_total}}</td>
-          <td>{{printer.counter_toner_black}}</td>
-          <td>{{printer.counter_toner_cyan}}</td>
-          <td>{{printer.counter_toner_magenta}}</td>
-          <td>{{printer.counter_toner_yellow}}</td>
-        </tr>
-
-        {% for log in printer.logs %}
-        <tr>
-        <td>Log</td>
-        <td> {{log.timestamp}} </td>
-          <td> {{log.fk_printer}}</td>
-          <td>{{log.counter_print_color}}</td>
-          <td>{{log.counter_copy_color}}</td>
-          <td>{{log.counter_color_total}}</td>
-          <td>{{log.counter_print_bw}}</td>
-          <td>{{log.counter_copy_bw}}</td>
-          <td>{{log.counter_bw_total}}</td>
-          <td>{{log.counter_toner_black}}</td>
-          <td>{{log.counter_toner_cyan}}</td>
-          <td>{{log.counter_toner_magenta}}</td>
-          <td>{{log.counter_toner_yellow}}</td>
-        </tr>
-        {% endfor %}
-
-        {% endfor %}
-
-        
-       {% for log in object_list %}
+           <th>Client</th>
+            <th>Date</th>
+            <th>Printer</th>
+            <th>PT Color</th>
+            <th>CP Color</th>
+            <th>Color Total</th>
+            <th>PT B&W</th>
+            <th>CP B&W</th>
+            <th>B & W total</th>
+            <th>Toner Black</th>
+            <th>Toner Cyan</th>
+            <th>Toner Magenta</th>
+            <th>Toner Yellow</th>
+          </tr>
+        </thead>
+ 
+        <tbody>
+ 
+           <tr>
+         <td>Totals</td>
+         <td>N/A</td>
+         <td>All Printers</td>
+          <td>{{total.counter_print_color}}</td>
+          <td>{{total.counter_copy_color}}</td>
+          <td>{{total.counter_color_total}}</td>
+          <td>{{total.counter_print_bw}}</td>
+          <td>{{total.counter_copy_bw}}</td>
+          <td>{{total.counter_bw_total}}</td>
+          <td>{{total.counter_toner_black}}</td>
+          <td>{{total.counter_toner_cyan}}</td>
+          <td>{{total.counter_toner_magenta}}</td>
+          <td>{{total.counter_toner_yellow}}</td>
+         </tr>
+ 
+         {% for printer in total_printer %}
          <tr>
-         <td>{{log.fk_printer.client}}</td>
-         <td>{{log.timestamp}}</td>
-           <td> {{ log.fk_printer }} </td>
+         <td>Total by printer</td>
+         <td> N/A </td>
+           <td> {{printer.fk_printer}}</td>
+           <td>{{printer.counter_print_color}}</td>
+           <td>{{printer.counter_copy_color}}</td>
+           <td>{{printer.counter_color_total}}</td>
+           <td>{{printer.counter_print_bw}}</td>
+           <td>{{printer.counter_copy_bw}}</td>
+           <td>{{printer.counter_bw_total}}</td>
+           <td>{{printer.counter_toner_black}}</td>
+           <td>{{printer.counter_toner_cyan}}</td>
+           <td>{{printer.counter_toner_magenta}}</td>
+            <td>{{printer.counter_toner_yellow}}</td>
+          </tr>
+  
+       {% endfor %}
+ 
+       {% for printer in total_printer %}
+         <tr>
+         <td>Latest 10 logs from: </td>
+         <td> </td>
+           <td> {{printer.fk_printer}} </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+           <td> </td>
+         </tr>
+ 
+ 
+          {% for log in printer.logs %}
+          <tr>
+          <td>Log</td>
+         <td> {{log.timestamp|date:"m/d/Y H:i"}} </td>
+           <td> {{log.fk_printer}}</td>
            <td>{{log.counter_print_color}}</td>
            <td>{{log.counter_copy_color}}</td>
            <td>{{log.counter_color_total}}</td>
@@ -103,13 +102,31 @@
            <td>{{log.counter_toner_yellow}}</td>
          </tr>
          {% endfor %}
-
-
-       </tbody>
-     </table>   
-     </div>      
-</div>
-{% endblock %}
-
-
-
+ 
+         {% endfor %}
+ 
+         
+        {% for log in object_list %}
+          <tr>
+          <td>{{log.fk_printer.client}}</td>
+          <td>{{ log.timestamp }}</td>
+            <td> {{ log.fk_printer }} </td>
+            <td>{{log.counter_print_color}}</td>
+            <td>{{log.counter_copy_color}}</td>
+            <td>{{log.counter_color_total}}</td>
+            <td>{{log.counter_print_bw}}</td>
+            <td>{{log.counter_copy_bw}}</td>
+            <td>{{log.counter_bw_total}}</td>
+            <td>{{log.counter_toner_black}}</td>
+            <td>{{log.counter_toner_cyan}}</td>
+            <td>{{log.counter_toner_magenta}}</td>
+            <td>{{log.counter_toner_yellow}}</td>
+          </tr>
+          {% endfor %}
+ 
+ 
+        </tbody>
+      </table>   
+      </div>      
+ </div>
+ {% endblock %}

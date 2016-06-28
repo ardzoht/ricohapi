@@ -74,32 +74,38 @@ class MessageProcessor:
 		print "P ID -> " + printer_id
 
 		events = []
+                
+                try:
+		    line = message_list[1]
+		    info = line.split('%')
+		    date = info[0][:-6] + '2016' + info[0][6:]
+		    date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
+		    info[0] = date
+		    global_counter = info[1]
+		    counter_print_color = info[2]
+		    counter_print_bw = info[3]
+		    counter_copy_color = info[4]
+		    counter_copy_bw = info[5]
+		    counter_fax_bw = info[6]
+		    counter_fax_color = info[7]
+		    counter_toner_black = info[8]
+		    counter_toner_cyan = info[9]
+		    counter_toner_magenta = info[10]
+		    counter_toner_yellow = info[11]
+		    try:
+		        counter_color_total = int(counter_print_color) + int(counter_copy_color) + int(counter_fax_bw)
+		        counter_bw_total = int(counter_print_bw) + int(counter_copy_bw) + int(counter_fax_color)
+		    except Exception:
+		        counter_color_total = 0
+                        counter_bw_totacounter_color_total = 0
+                        counter_bw_total = 0
+		    events.append(info)
 
-		line = message_list[1]
-		info = line.split('%')
-		date = info[0][:-6] + '2015' + info[0][6:]
-		date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
-		info[0] = date
-		global_counter = info[1]
-		counter_print_color = info[2]
-		counter_print_bw = info[3]
-		counter_copy_color = info[4]
-		counter_copy_bw = info[5]
-		counter_fax_bw = info[6]
-		counter_fax_color = info[7]
-		counter_toner_black = info[8]
-		counter_toner_cyan = info[9]
-		counter_toner_magenta = info[10]
-		counter_toner_yellow = info[11]
-		try:
-		    counter_color_total = int(counter_print_color) + int(counter_copy_color) + int(counter_fax_bw)
-		    counter_bw_total = int(counter_print_bw) + int(counter_copy_bw) + int(counter_fax_color)
-		except Exception:
-		    counter_color_total = 0
-                    counter_bw_totacounter_color_total = 0
-                    counter_bw_total = 0
-		events.append(info)
-
-		print "Events -> ", events
-		log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id, counter_fax_bw, counter_fax_color, counter_toner_black, counter_toner_cyan, counter_toner_magenta, counter_toner_yellow)
-		log.upload()
+		    print "Events -> ", events
+		    log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id, counter_fax_bw, counter_fax_color, counter_toner_black, counter_toner_cyan, counter_toner_magenta, counter_toner_yellow)
+		    log.upload()
+                    return True
+                except Exception:
+                    print "\nError with the current message: ", info
+                    print "Will continue with the procedure.\n"
+                    return False

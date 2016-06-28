@@ -40,8 +40,13 @@ def socket_server(address):
             sock.sendto(response, addr)
         else:
             processor = MessageProcessor()
-            processor.process_message(msg)
-            sock.sendto(response, addr)
+            status = processor.process_message(msg)
+            if status:
+                sock.sendto(response, addr)
+                print "Save Succesful!\n"
+            else:
+                sock.sendto(response, addr)
+                print "There was a trouble with the message: ", msg_list, "\nThe response has been sent to the device, but proceed to look over for the issue in the device.\n"
 
 if __name__ == '__main__':
     socket_server(('', PORT))
