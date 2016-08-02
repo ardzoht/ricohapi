@@ -50,6 +50,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+
 ROOT_URLCONF = 'ricoh.urls'
 
 WSGI_APPLICATION = 'ricoh.wsgi.application'

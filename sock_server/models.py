@@ -28,30 +28,10 @@ class Log:
 
 	def upload(self):
 		headers = {'Content-Type': "application/json"}
-		r = requests.post("http://riego.chi.itesm.mx:8081/api/logs/", data=self.to_json(),
+		r = requests.post("http://pictorica.zapto.org:8081/api/logs/", data=self.to_json(),
         				  headers=headers)
 		print self.to_json(), r.status_code
 
-class User:
-
-	def __init__(self, message=None):
-		#efine message slicing by protocol structure
-
-		#Using dummy data
-		self.total_counter = 0
-		self.user_counter_print_bw = 0
-		self.user_counter_print_color = 0
-		self.user_counter_copy_bw = 0
-		self.user_counter_copy_color = 0
-
-	def to_json(self):
-		return json.dumps(self, default = lambda o:o.__dict__, sort_keys=True, indent=4)
-
-	def upload(self):
-		headers = {'Content-Type': "application/json"}
-		r = requests.post("http://riego.chi.itesm.mx:8081/api/users/", data=self.to_json(),
-						  headers=headers)
-		print self.to_json(), r.status_code
 
 class MessageProcessor:
 
@@ -68,30 +48,30 @@ class MessageProcessor:
 		counter_toner_magenta = 0
 		counter_toner_yellow = 0
 
-		message_list = message.split('\n')
-		header = message_list[0]
-		printer_id = header.split('%')[1]
+		message_list = message.split('%')
+		#  header = message_list[0]
+		printer_id = message_list.split('%')[1]
 		print "P ID -> " + printer_id
 
 		events = []
                 
                 try:
-		    line = message_list[1]
-		    info = line.split('%')
-		    date = info[0][:-6] + '2016' + info[0][6:]
+		    line = message_list
+		    #  info = line.split('%')
+		    date = info[0][:-8] + '2016' + info[0][8:]
 		    date = datetime.datetime.strptime(date, "%d%m%Y%H%M")
 		    info[0] = date
-		    global_counter = info[1]
-		    counter_print_color = info[2]
-		    counter_print_bw = info[3]
-		    counter_copy_color = info[4]
-		    counter_copy_bw = info[5]
-		    counter_fax_bw = info[6]
-		    counter_fax_color = info[7]
-		    counter_toner_black = info[8]
-		    counter_toner_cyan = info[9]
-		    counter_toner_magenta = info[10]
-		    counter_toner_yellow = info[11]
+		    global_counter = info[2]
+		    counter_print_color = info[3]
+		    counter_print_bw = info[4]
+		    counter_copy_color = info[5]
+		    counter_copy_bw = info[6]
+		    counter_fax_bw = info[7]
+		    counter_fax_color = info[8]
+		    counter_toner_black = info[9]
+		    counter_toner_cyan = info[10]
+		    counter_toner_magenta = info[11]
+		    counter_toner_yellow = info[12]
 		    try:
 		        counter_color_total = int(counter_print_color) + int(counter_copy_color) + int(counter_fax_bw)
 		        counter_bw_total = int(counter_print_bw) + int(counter_copy_bw) + int(counter_fax_color)
