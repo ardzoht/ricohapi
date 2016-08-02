@@ -31,6 +31,7 @@ class PrinterLog(models.Model):
     counter_toner_cyan = models.IntegerField(default=0)
     counter_toner_magenta = models.IntegerField(default=0)
     counter_toner_yellow = models.IntegerField(default=0)
+    counter_duplex = models.IntegerField(default=0)
 
     def __unicode__(self):
         return str(self.fk_printer)
