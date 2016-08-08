@@ -14,5 +14,5 @@ urlpatterns = patterns(
     url(r'^dashboard/', Dashboard.as_view(), name='dashboard'),
     url(r'^log/', Log.as_view(), name='log'),
     url(r'^dashboard/connection', Connection.as_view(), name='connection'),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls)),
 )
