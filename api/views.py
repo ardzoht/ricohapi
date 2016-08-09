@@ -1,10 +1,10 @@
 from django.shortcuts import render
-import django_filters
+import rest_framework_filters as filters
 from api.models import Printer
 from api.models import PrinterLog as Logs
 from api.serializers import PrinterSerializer, PrinterLogSerializer
 from rest_framework.generics import ListCreateAPIView
-from rest_framework import viewsets, filters
+from rest_framework import viewsets #  filters
 from rest_framework.renderers import JSONRenderer
 from django.views.generic import ListView, TemplateView
 import datetime
@@ -14,12 +14,21 @@ from rest_framework_xml.parsers import XMLParser
 from rest_framework_xml.renderers import XMLRenderer
 
 # Create your views here.
-class LogDateFilter(django_filters.FilterSet):
-    timestamp = django_filters.IsoDateTimeFilter(name="timestamp", lookup_type="lte")
+class LogDateFilter(filters.FilterSet):
+    timestamp = filters.DateTimeFilter(name="timestamp", lookup_type="lte")
 
     class Meta:
         model = Logs
-        fields = ('log_id', 'timestamp', 'global_counter', 'counter_print_bw', 'counter_print_color','counter_copy_bw', 'counter_copy_color','counter_bw_total', 'counter_color_total', 'fk_printer', 'counter_fax_bw', 'counter_fax_color', 'counter_toner_black', 'counter_toner_cyan', 'counter_toner_magenta', 'counter_toner_yellow', 'counter_duplex')
+        fields = ['timestamp']
+
+class PrinterFilters(filters.FilterSet):
+    printer_id = filters.CharFilter(name = "printer_id")
+    client = filters.CharFilter(name = "client")
+    cutDate = filters.NumberFilter(name = "cutDate")
+
+    class Meta:
+        model = Printer
+        fields = ['printer_id', 'client', 'cutDate']
 
 class PrinterLog(viewsets.ModelViewSet):
     serializer_class = PrinterLogSerializer
@@ -28,10 +37,11 @@ class PrinterLog(viewsets.ModelViewSet):
 
 
 class Printers(viewsets.ModelViewSet):
-    queryset = Printer.objects.all()
     serializer_class = PrinterSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('client', 'cutDate')
+    queryset = Printer.objects.all()
+    filter_class = PrinterFilters
+    #  filter_backends = (filters.FilterBackend,)
+    #  filter_fields = ('client', 'cutDate')
 
 class Dashboard(TemplateView):
     template_name = "form.html"
