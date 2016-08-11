@@ -15,7 +15,7 @@ from rest_framework_xml.renderers import XMLRenderer
 
 # Create your views here.
 class LogDateFilter(filters.FilterSet):
-    timestamp = filters.DateTimeFilter(name="timestamp", lookup_type="lte")
+    timestamp = filters.DateTimeFilter(name="timestamp", lookup_type="gte")
 
     class Meta:
         model = Logs
@@ -40,8 +40,6 @@ class Printers(viewsets.ModelViewSet):
     serializer_class = PrinterSerializer
     queryset = Printer.objects.all()
     filter_class = PrinterFilters
-    #  filter_backends = (filters.FilterBackend,)
-    #  filter_fields = ('client', 'cutDate')
 
 class Dashboard(TemplateView):
     template_name = "form.html"
