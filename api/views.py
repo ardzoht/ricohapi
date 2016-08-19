@@ -4,7 +4,7 @@ from api.models import Printer
 from api.models import PrinterLog as Logs
 from api.serializers import PrinterSerializer, PrinterLogSerializer
 from rest_framework.generics import ListCreateAPIView
-from rest_framework import viewsets #  filters
+from rest_framework import viewsets
 from rest_framework.renderers import JSONRenderer
 from django.views.generic import ListView, TemplateView
 import datetime
@@ -16,10 +16,12 @@ from rest_framework_xml.renderers import XMLRenderer
 # Create your views here.
 class LogDateFilter(filters.FilterSet):
     timestamp = filters.DateTimeFilter(name="timestamp", lookup_type="gte")
+    coordinate_X = filters.NumberFilter(name = "coordinate_X")
+    coordinate_Y = filters.NumberFilter(name = "coordinate_Y")
 
     class Meta:
         model = Logs
-        fields = ['timestamp']
+        fields = ['timestamp', 'coordinate_X', 'coordinate_Y']
 
 class PrinterFilters(filters.FilterSet):
     printer_id = filters.CharFilter(name = "printer_id")

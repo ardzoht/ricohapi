@@ -1,8 +1,8 @@
 from django.db import models
 
-# Create your models here.
+#  Create your models here.
 
-#For each printer: PrinterId, Description, emails, cut Date, Client
+#  For each printer: PrinterId, Description, emails, cut Date, Client
 class Printer(models.Model):
     printer_id = models.CharField(primary_key=True, max_length=25)
     description = models.CharField(max_length=100)
@@ -13,7 +13,8 @@ class Printer(models.Model):
     def __unicode__(self):
            return str(self.printer_id)
 	    
-#Logs for each printer: These are all Integers, since they are numbers or codes   
+#  Logs for each printer: These are all Integers, since they are numbers or codes
+#  Coordinates X & Y are floats, for the nature of the number   
 class PrinterLog(models.Model):
     log_id = models.IntegerField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -25,13 +26,15 @@ class PrinterLog(models.Model):
     counter_bw_total = models.IntegerField()
     counter_color_total = models.IntegerField()
     fk_printer = models.ForeignKey(Printer) 
-    counter_fax_bw = models.IntegerField(default=0)
-    counter_fax_color = models.IntegerField(default=0)
-    counter_toner_black = models.IntegerField(default=0)
-    counter_toner_cyan = models.IntegerField(default=0)
-    counter_toner_magenta = models.IntegerField(default=0)
-    counter_toner_yellow = models.IntegerField(default=0)
-    counter_duplex = models.IntegerField(default=0)
+    counter_fax_bw = models.IntegerField(default = 0)
+    counter_fax_color = models.IntegerField(default = 0)
+    counter_toner_black = models.IntegerField(default = 0)
+    counter_toner_cyan = models.IntegerField(default = 0)
+    counter_toner_magenta = models.IntegerField(default = 0)
+    counter_toner_yellow = models.IntegerField(default = 0)
+    counter_duplex = models.IntegerField(default = 0)
+    coordinate_X = models.FloatField(default = 28.698494)
+    coordinate_Y = models.FloatField(default = -106.130584)
 
     def __unicode__(self):
         return str(self.fk_printer)
