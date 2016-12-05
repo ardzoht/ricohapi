@@ -31,10 +31,67 @@ class Log:
 
 	def upload(self):
 		headers = {'Content-Type': "application/json"}
-		r = requests.post("http://192.168.1.2:8081/api/logs/", data=self.to_json(),
+		r = requests.post("http://pictorica.zapto.org:8081/api/logs/", data=self.to_json(),
         				  headers=headers)
 		print self.to_json(), r.status_code
 
+class HeartBeat:
+
+	def __init__(self, imei, rssi, error, version, serial):
+		#define message slicing by protocol structure
+
+		# Using dummy data for now
+		self.IMEI = imei
+		self.RSSI = rssi
+		self.ERROR = error
+		self.VERSION = version
+		self.SERIAL = serial
+
+	def to_json(self):
+		return json.dumps(self, default= lambda o: o.__dict__, sort_keys=True, indent=4)
+
+	def upload(self):
+		headers = {'Content-Type': "application/json"}
+		r = requests.put("http://pictorica.zapto.org:8081/api/heartbeats/", data=self.to_json(),
+        				  headers=headers)
+		print self.to_json(), r.status_code
+
+class HeartBeatProcessor:
+
+	def heart_beat(self, heartbeat):
+		IMEI = ""
+		RSSI = ""
+		ERROR = ""
+		VERSION = ""
+		SERIAL = ""
+
+		heart_beat_message = heartbeat.split('%')
+		SERIAL = heart_beat_message[5]
+		print "Printer SERIAL -> " + SERIAL
+
+		events = []
+
+		try:
+			info = []
+			info = heart_beat_message
+			date = datetime.datetime.now()
+			info.append(date)
+			IMEI = heart_beat_message[0]
+			RSSI = heart_beat_message[1]
+			ERROR = heart_beat_message[2]
+			VERSION = heart_beat_message[3]
+			SERIAL = heart_beat_message[4]
+
+			events.append(info)
+
+			print "Events -> ", events
+			hb = HeartBeat(IMEI, RSSI, ERROR, VERSION, SERIAL)
+			hb.upload()
+			return True
+
+		except Exception:
+			print "\nError with the current heartbeat: ", info
+			return False
 
 class MessageProcessor:
 
@@ -59,7 +116,7 @@ class MessageProcessor:
 		print "P ID -> " + printer_id
 
 		events = []
-        
+
 		try:
 			info = []
 			info = message_list

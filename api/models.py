@@ -2,21 +2,10 @@ from django.db import models
 
 #  Create your models here.
 
-#  For each printer: PrinterId, Description, emails, cut Date, Client
-class Printer(models.Model):
-    printer_id = models.CharField(primary_key=True, max_length=25)
-    description = models.CharField(max_length=100)
-    emailReport = models.CharField(max_length=450, default='nfc.dev.cita@gmail.com;')
-    cutDate = models.IntegerField(default=1)
-    client = models.CharField(max_length=30, default='CITA')
-
-    def __unicode__(self):
-           return str(self.printer_id)
-	    
 #  Logs for each printer: These are all Integers, since they are numbers or codes
-#  Coordinates X & Y are floats, for the nature of the number   
+#  Coordinates X & Y are floats, for the nature of the number
 class PrinterLog(models.Model):
-    log_id = models.IntegerField(primary_key=True)
+    log_id = models.AutoField(primary_key=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     global_counter = models.IntegerField()
     counter_print_bw = models.IntegerField()
@@ -25,7 +14,7 @@ class PrinterLog(models.Model):
     counter_copy_color = models.IntegerField()
     counter_bw_total = models.IntegerField()
     counter_color_total = models.IntegerField()
-    fk_printer = models.ForeignKey(Printer) 
+    fk_printer = models.CharField(max_length=15, default='W0123456789')
     counter_fax_bw = models.IntegerField(default = 0)
     counter_fax_color = models.IntegerField(default = 0)
     counter_toner_black = models.IntegerField(default = 0)
@@ -38,3 +27,13 @@ class PrinterLog(models.Model):
 
     def __unicode__(self):
         return str(self.fk_printer)
+
+class Heartbeats(models.Model):
+    imei = models.CharField(max_length=20)
+    rssi = models.CharField(max_length=2)
+    error = models.CharField(max_length=4)
+    version = models.CharField(max_length=12)
+    serial = models.CharField(primary_key=True, max_length=15)
+
+    def __unicode__(self):
+           return str(self.serial)
