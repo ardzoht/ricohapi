@@ -22,6 +22,9 @@ class PrinterLog(models.Model):
     counter_toner_magenta = models.IntegerField(default = 0)
     counter_toner_yellow = models.IntegerField(default = 0)
     counter_duplex = models.IntegerField(default = 0)
+    counter_DLT_bw = models.IntegerField(default = 0)
+    counter_DLT_color = models.IntegerField(default = 0)
+    counter_scan_jobs = models.IntegerField(default = 0)
     coordinate_X = models.FloatField(default = 28.698494)
     coordinate_Y = models.FloatField(default = -106.130584)
 

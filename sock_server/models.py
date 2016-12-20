@@ -4,7 +4,7 @@ import datetime
 
 class Log:
 
-	def __init__(self, gc, cpbw, cpc, ccbw, ccc,cpt, cct, p_id, cfbw, cfc, tonblack, toncyan, tonmag, tonyell, cduplex, cooX, cooY):
+	def __init__(self, gc, cpbw, cpc, ccbw, ccc,cpt, cct, p_id, cfbw, cfc, tonblack, toncyan, tonmag, tonyell, cduplex, cdlt_bw, cdlt_c, csj, cooX, cooY):
 		#define message slicing by protocol structure
 
 		# Using dummy data for now
@@ -23,6 +23,9 @@ class Log:
 		self.counter_toner_magenta = tonmag
 		self.counter_toner_yellow = tonyell
 		self.counter_duplex = cduplex
+		self.counter_DLT_bw = cdlt_bw
+		self.counter_DLT_color = cdlt_c
+		self.counter_scan_jobs = csj
 		self.coordinate_X = cooX
 		self.coordinate_Y = cooY
 
@@ -31,7 +34,7 @@ class Log:
 
 	def upload(self):
 		headers = {'Content-Type': "application/json"}
-		r = requests.post("http://pictorica.zapto.org:8081/api/logs/", data=self.to_json(),
+		r = requests.post("http://192.168.1.2:8081/api/logs/", data=self.to_json(),
         				  headers=headers)
 		print self.to_json(), r.status_code
 
@@ -52,7 +55,7 @@ class HeartBeat:
 
 	def upload(self):
 		headers = {'Content-Type': "application/json"}
-		r = requests.put("http://pictorica.zapto.org:8081/api/heartbeats/", data=self.to_json(),
+		r = requests.put("http://192.168.1.2:8081/api/heartbeats/", data=self.to_json(),
         				  headers=headers)
 		print self.to_json(), r.status_code
 
@@ -108,6 +111,9 @@ class MessageProcessor:
 		counter_toner_magenta = 0
 		counter_toner_yellow = 0
 		counter_duplex = 0
+	    counter_DLT_bw = 0
+	    counter_DLT_color = 0
+	    counter_scan_jobs = 0
 		coordinate_Y = 0.0
 		coordinate_X = 0.0
 
@@ -135,8 +141,11 @@ class MessageProcessor:
 			counter_toner_magenta = info[12]
 			counter_toner_yellow = info[13]
 			counter_duplex = info[14]
-			coordinate_X = info[15]
-			coordinate_Y = info[16]
+			counter_DLT_bw = info[15]
+			counter_DLT_color = info[16]
+			counter_scan_jobs = info[17]
+			coordinate_X = info[18]
+			coordinate_Y = info[19]
 			try:
 				counter_color_total = int(counter_print_color) + int(counter_copy_color) + int(counter_fax_bw)
 				counter_bw_total = int(counter_print_bw) + int(counter_copy_bw) + int(counter_fax_color)
@@ -148,7 +157,7 @@ class MessageProcessor:
 			events.append(info)
 
 			print "Events -> ", events
-			log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id, counter_fax_bw, counter_fax_color, counter_toner_black, counter_toner_cyan, counter_toner_magenta, counter_toner_yellow, counter_duplex, coordinate_X, coordinate_Y)
+			log = Log(global_counter, counter_print_bw, counter_print_color, counter_copy_bw, counter_copy_color, counter_color_total, counter_bw_total, printer_id, counter_fax_bw, counter_fax_color, counter_toner_black, counter_toner_cyan, counter_toner_magenta, counter_toner_yellow, counter_duplex, counter_DLT_bw, counter_DLT_color, counter_scan_jobs, coordinate_X, coordinate_Y)
 			log.upload()
 			return True
 
