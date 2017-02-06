@@ -111,9 +111,9 @@ class MessageProcessor:
 		counter_toner_magenta = 0
 		counter_toner_yellow = 0
 		counter_duplex = 0
-	    counter_DLT_bw = 0
-	    counter_DLT_color = 0
-	    counter_scan_jobs = 0
+		counter_DLT_bw = 0
+		counter_DLT_color = 0
+		counter_scan_jobs = 0
 		coordinate_Y = 0.0
 		coordinate_X = 0.0
 
