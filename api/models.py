@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 #  Create your models here.
 
@@ -6,14 +7,14 @@ from django.db import models
 #  Coordinates X & Y are floats, for the nature of the number
 class PrinterLog(models.Model):
     log_id = models.AutoField(primary_key=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    global_counter = models.IntegerField()
-    counter_print_bw = models.IntegerField()
-    counter_print_color = models.IntegerField()
-    counter_copy_bw = models.IntegerField()
-    counter_copy_color = models.IntegerField()
-    counter_bw_total = models.IntegerField()
-    counter_color_total = models.IntegerField()
+    timestamp = models.DateTimeField(default = datetime.now)
+    global_counter = models.IntegerField(default = 0)
+    counter_print_bw = models.IntegerField(default = 0)
+    counter_print_color = models.IntegerField(default = 0)
+    counter_copy_bw = models.IntegerField(default = 0)
+    counter_copy_color = models.IntegerField(default = 0)
+    counter_bw_total = models.IntegerField(default = 0)
+    counter_color_total = models.IntegerField(default = 0)
     fk_printer = models.CharField(max_length=15, default='W0123456789')
     counter_fax_bw = models.IntegerField(default = 0)
     counter_fax_color = models.IntegerField(default = 0)
